@@ -1,5 +1,7 @@
 package com.aatishrana.inshortsdemo.model.itemData;
 
+import android.graphics.Color;
+
 /**
  * Created by Aatish on 11/4/2017.
  */
@@ -48,6 +50,17 @@ public class CardItemImage implements CardItemData
     public String getPlaceHolderType()
     {
         return placeHolderType;
+    }
+
+    //todo write test
+    public int getPlaceHolderColor()
+    {
+        if (getPlaceHolderData() != null && getPlaceHolderData().length() > 0)
+        {
+            if (getPlaceHolderType().equalsIgnoreCase("RGB"))
+                return Color.parseColor(getPlaceHolderData());
+        }
+        return 0xffffff;
     }
 
     @Override

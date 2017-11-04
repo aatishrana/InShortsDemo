@@ -7,8 +7,41 @@
     android:layout_height="match_parent"
     tools:context="com.aatishrana.inshortsdemo.MainActivity">
 
+    <!-- data view-->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/activity_main_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
+    <!-- loading view-->
+    <ProgressBar
+        android:id="@+id/activity_main_progressBar"
+        style="?android:progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminate="true"/>
+
+    <!-- error view-->
+    <LinearLayout
+        android:id="@+id/activity_main_ll_error_view"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/no_data_found"/>
+
+        <Button
+            android:id="@+id/activity_main_btn_retry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/try_again"/>
+
+    </LinearLayout>
 </FrameLayout>

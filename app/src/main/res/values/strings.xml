@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">InshortsDemo</string>
+    <string name="no_data_found">Data not found</string>
+    <string name="try_again">Retry</string>
 </resources>
