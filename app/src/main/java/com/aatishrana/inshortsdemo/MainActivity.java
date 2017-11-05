@@ -69,11 +69,12 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, MainView>
         View bottomSheet = findViewById(R.id.bottom_sheet1);
         mBottomSheetBehavior1 = BottomSheetBehavior.from(bottomSheet);
         webView = (WebView) findViewById(R.id.sheet_more_webview);
-        webView.getSettings().setAppCachePath(getApplicationContext().getCacheDir().getAbsolutePath());
-        webView.getSettings().setAllowFileAccess(true);
-        webView.getSettings().setAppCacheEnabled(true);
+//        webView.getSettings().setAppCachePath(getApplicationContext().getCacheDir().getAbsolutePath());
+//        webView.getSettings().setAllowFileAccess(true);
+//        webView.getSettings().setAppCacheEnabled(true);
 //        webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
+//        webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+//        webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
         tvClose.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -175,15 +176,18 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, MainView>
     @Override
     public void onClick(String url, int position, boolean fromMultiImages)
     {
-        if (!fromMultiImages && position == layoutManager.findFirstVisibleItemPosition())
-            if (mBottomSheetBehavior1.getState() != BottomSheetBehavior.STATE_EXPANDED
-                    && url != null
-                    && url.length() > 0)
-            {
-                mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_EXPANDED);
-                webView.setWebViewClient(new WebViewClient());
-                webView.loadUrl(url);
-                tvUrl.setText(url);
-            }
+        if (!fromMultiImages && position != layoutManager.findFirstVisibleItemPosition())
+            return;
+
+        if (mBottomSheetBehavior1.getState() != BottomSheetBehavior.STATE_EXPANDED
+                && url != null
+                && url.length() > 0)
+        {
+            Help.L("url=" + url);
+            mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_EXPANDED);
+            webView.setWebViewClient(new WebViewClient());
+            webView.loadUrl(url);
+            tvUrl.setText(url);
+        }
     }
 }

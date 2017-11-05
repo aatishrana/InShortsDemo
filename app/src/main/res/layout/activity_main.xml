@@ -14,12 +14,9 @@
 
         <FrameLayout
             android:id="@+id/activity_main"
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/white"
-            tools:context="com.aatishrana.inshortsdemo.MainActivity">
+            android:layout_height="wrap_content"
+            android:background="@android:color/white">
 
             <!-- data view-->
             <android.support.v7.widget.RecyclerView
@@ -31,9 +28,10 @@
             <ProgressBar
                 android:id="@+id/activity_main_progressBar"
                 style="?android:progressBarStyleHorizontal"
-                android:layout_width="wrap_content"
+                android:layout_width="32dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="32dp"
                 android:indeterminate="true"/>
 
             <!-- error view-->
