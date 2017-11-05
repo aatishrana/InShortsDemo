@@ -1,6 +1,7 @@
 package com.aatishrana.inshortsdemo.presenter;
 
-import com.aatishrana.inshortsdemo.DataRepository;
+import com.aatishrana.inshortsdemo.data.DataRepository;
+import com.aatishrana.inshortsdemo.data.DataRepositoryImpl;
 import com.aatishrana.inshortsdemo.base.PresenterFactory;
 
 /**

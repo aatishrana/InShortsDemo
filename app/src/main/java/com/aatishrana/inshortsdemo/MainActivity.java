@@ -20,6 +20,9 @@ import com.aatishrana.inshortsdemo.adapter.MyLinearLayout;
 import com.aatishrana.inshortsdemo.adapter.StartSnapHelper;
 import com.aatishrana.inshortsdemo.base.BasePresenterActivity;
 import com.aatishrana.inshortsdemo.base.PresenterFactory;
+import com.aatishrana.inshortsdemo.data.DataRepository;
+import com.aatishrana.inshortsdemo.data.DataRepositoryImpl;
+import com.aatishrana.inshortsdemo.data.DataRepositoryMock;
 import com.aatishrana.inshortsdemo.model.CardItem;
 import com.aatishrana.inshortsdemo.network.ApiClient;
 import com.aatishrana.inshortsdemo.network.ApiInterface;
@@ -28,7 +31,6 @@ import com.aatishrana.inshortsdemo.presenter.MainPresenterFactory;
 import com.aatishrana.inshortsdemo.presenter.MainView;
 import com.aatishrana.inshortsdemo.utils.Help;
 
-import java.net.URI;
 import java.util.List;
 
 public class MainActivity extends BasePresenterActivity<MainPresenter, MainView> implements MainView, MyAdapter.MyClickListener
@@ -53,8 +55,8 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, MainView>
         setContentView(R.layout.activity_main);
         //boilerplate
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
-        DataRepository dataRepository = new DataRepository(apiInterface);
-        presenterFactory = new MainPresenterFactory(dataRepository);
+        DataRepository dataRepositoryImpl = new DataRepositoryImpl(apiInterface);
+        presenterFactory = new MainPresenterFactory(dataRepositoryImpl);
 
         //init views
         recyclerView = (RecyclerView) findViewById(R.id.activity_main_recyclerView);

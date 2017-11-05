@@ -1,5 +1,7 @@
 package com.aatishrana.inshortsdemo;
 
+import com.aatishrana.inshortsdemo.data.DataRepositoryImpl;
+import com.aatishrana.inshortsdemo.data.MyJsonParser;
 import com.aatishrana.inshortsdemo.model.CardItem;
 
 import org.json.JSONObject;
@@ -14,15 +16,15 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by Aatish on 11/4/2017.
  */
-public class DataRepositoryTest
+public class DataRepositoryImplTest
 {
-    DataRepository repository;
+    DataRepositoryImpl repository;
     String sampleJson;
 
     @Before
     public void setUp() throws Exception
     {
-        repository = new DataRepository(null);
+        repository = new DataRepositoryImpl(null);
         sampleJson = "{\n" +
                 "    \"min_card_id\": \"id_ccHnkxcG\",\n" +
                 "    \"card_list\": [\n" +
@@ -229,7 +231,8 @@ public class DataRepositoryTest
     @Test
     public void parseJson() throws Exception
     {
-        List<CardItem> data = repository.parseJson(new JSONObject(sampleJson));
+
+        List<CardItem> data = MyJsonParser.parseJson(new JSONObject(sampleJson));
         assertEquals(2, data.size());
     }
 

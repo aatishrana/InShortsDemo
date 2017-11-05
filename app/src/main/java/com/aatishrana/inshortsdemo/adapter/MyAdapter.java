@@ -55,15 +55,9 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        if (viewType == VIEW_TYPE_SINGLE_IMAGE)
-            return new SingleImageVH(inflater.inflate(R.layout.item_image, parent, false));
-        else if (viewType == VIEW_TYPE_MULTIPLE_IMAGE)
+        if (viewType == VIEW_TYPE_MULTIPLE_IMAGE)
             return new MultiImageVH(inflater.inflate(R.layout.item_multi_image, parent, false));
-        else
-        {
-            Help.E("viewType is null");
-            return null;
-        }
+        return new SingleImageVH(inflater.inflate(R.layout.item_image, parent, false));
     }
 
 
@@ -89,18 +83,14 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
                 //only for first item
                 if (position == 0)
-                {
                     holder.itemView.setAlpha(1f);
-                }
 
             } else if (holder instanceof MultiImageVH && obj.getType().equalsIgnoreCase(mediaTypeMultipleImage))
             {
-                Help.E("multi images ");
                 MultiImageVH multiImageVH = (MultiImageVH) holder;
                 CardItemMulti innerCards = (CardItemMulti) obj.getData();
 
                 LinearLayoutManager ll = new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.HORIZONTAL, false);
-
                 try
                 {
                     SnapHelper snapHelper = new StartSnapHelper();
@@ -121,10 +111,8 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public int getItemViewType(int position)
     {
         if (data.get(position).getType().equalsIgnoreCase(mediaTypeMultipleImage))
-        {
-            Help.E("returning multiple images type");
             return VIEW_TYPE_MULTIPLE_IMAGE;
-        } else
+        else
             return VIEW_TYPE_SINGLE_IMAGE;
     }
 

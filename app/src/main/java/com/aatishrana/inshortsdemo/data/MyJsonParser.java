@@ -1,101 +1,27 @@
-package com.aatishrana.inshortsdemo;
+package com.aatishrana.inshortsdemo.data;
 
 import com.aatishrana.inshortsdemo.model.CardItem;
 import com.aatishrana.inshortsdemo.model.itemData.CardItemData;
 import com.aatishrana.inshortsdemo.model.itemData.CardItemImage;
 import com.aatishrana.inshortsdemo.model.itemData.CardItemMulti;
 import com.aatishrana.inshortsdemo.model.itemData.CardItemMultiImage;
-import com.aatishrana.inshortsdemo.network.ApiInterface;
 import com.aatishrana.inshortsdemo.utils.Const;
-import com.aatishrana.inshortsdemo.utils.Help;
-import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.annotations.NonNull;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 /**
- * Created by Aatish on 11/4/2017.
+ * Created by Aatish on 11/5/2017.
  */
 
-public class DataRepository
+public class MyJsonParser
 {
-    private ApiInterface apiInterface;
-
-    public DataRepository(ApiInterface apiInterface)
-    {
-        this.apiInterface = apiInterface;
-    }
-
-    public Observable<List<CardItem>> getData()
-    {
-        return Observable.create(new ObservableOnSubscribe<List<CardItem>>()
-        {
-            @Override
-            public void subscribe(@NonNull final ObservableEmitter<List<CardItem>> e) throws Exception
-            {
-                apiInterface.getAllData("123", "Android", "Vm10S1MyRXlXbE5UTTBaNFUyMXdhMVF3VGtaVVp6MDk=")
-                        .enqueue(new Callback<JsonObject>()
-                        {
-                            @Override
-                            public void onResponse(Call<JsonObject> call, Response<JsonObject> response)
-                            {
-                                if (response.isSuccessful())
-                                {
-                                    try
-                                    {
-                                        List<CardItem> data = parseJson(new JSONObject(response.body().toString()));
-                                        Collections.sort(data, new Comparator<CardItem>()
-                                        {
-                                            @Override
-                                            public int compare(CardItem o1, CardItem o2)
-                                            {
-                                                if (o1.getRank() > o2.getRank())
-                                                    return 1;
-                                                else if (o1.getRank() < o2.getRank())
-                                                    return -1;
-                                                else
-                                                    return 0;
-                                            }
-                                        });
-                                        e.onNext(data);
-                                        e.onComplete();
-                                    } catch (JSONException ex)
-                                    {
-                                        ex.printStackTrace();
-                                        e.onError(ex);
-                                    }
-                                } else
-                                    e.onError(new RuntimeException("Network Call failed"));
-                            }
-
-                            @Override
-                            public void onFailure(Call<JsonObject> call, Throwable t)
-                            {
-                                t.printStackTrace();
-                                e.onError(t);
-                            }
-                        });
-            }
-        });
-    }
-
-    List<CardItem> parseJson(JSONObject body) throws JSONException
+    public static List<CardItem> parseJson(JSONObject body) throws JSONException
     {
         List<CardItem> cardItemList = new ArrayList<>();
         if (body.has("card_list"))

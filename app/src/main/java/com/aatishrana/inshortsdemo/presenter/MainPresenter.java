@@ -1,6 +1,6 @@
 package com.aatishrana.inshortsdemo.presenter;
 
-import com.aatishrana.inshortsdemo.DataRepository;
+import com.aatishrana.inshortsdemo.data.DataRepository;
 import com.aatishrana.inshortsdemo.base.Presenter;
 import com.aatishrana.inshortsdemo.model.CardItem;
 
