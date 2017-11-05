@@ -33,20 +33,6 @@ public class MyLinearLayout extends LinearLayoutManager
         return super.scrollVerticallyBy(dy, recycler, state);
     }
 
-    @Override
-    public void startSmoothScroll(RecyclerView.SmoothScroller smoothScroller)
-    {
-//        animate();
-        super.startSmoothScroll(smoothScroller);
-    }
-
-    @Override
-    public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int position)
-    {
-        super.smoothScrollToPosition(recyclerView, state, position);
-
-    }
-
     private void animate()
     {
         if (dy > 0)
@@ -57,12 +43,14 @@ public class MyLinearLayout extends LinearLayoutManager
 
             if (view != null && position != lastPosition)
             {
-                ObjectAnimator scale = ObjectAnimator.ofFloat(view, "scaleX", 1.05f);
-                scale.setDuration(300);
+                ObjectAnimator scalex = ObjectAnimator.ofFloat(view, "scaleX", 1.05f);
+                scalex.setDuration(300);
+                ObjectAnimator scaley = ObjectAnimator.ofFloat(view, "scaleY", 1.05f);
+                scaley.setDuration(300);
                 ObjectAnimator alpha2 = ObjectAnimator.ofFloat(view, "alpha", 1f);
                 alpha2.setDuration(300);
                 AnimatorSet animset = new AnimatorSet();
-                animset.play(alpha2).with(scale);
+                animset.play(alpha2).with(scaley).with(scalex);
                 animset.start();
 
 //                RecyclerView.LayoutParams lp = (RecyclerView.LayoutParams) view.getLayoutParams();
@@ -78,12 +66,14 @@ public class MyLinearLayout extends LinearLayoutManager
             View view = findViewByPosition(position + 1);
             if (view != null)
             {
-                ObjectAnimator scale = ObjectAnimator.ofFloat(view, "scaleX", 0.95f);
-                scale.setDuration(300);
+                ObjectAnimator scalex = ObjectAnimator.ofFloat(view, "scaleX", 0.95f);
+                scalex.setDuration(300);
+                ObjectAnimator scaley = ObjectAnimator.ofFloat(view, "scaleY", 0.95f);
+                scaley.setDuration(300);
                 ObjectAnimator alpha2 = ObjectAnimator.ofFloat(view, "alpha", 0.2f);
                 alpha2.setDuration(300);
                 AnimatorSet animset = new AnimatorSet();
-                animset.play(alpha2).with(scale);
+                animset.play(alpha2).with(scaley).with(scalex);
                 animset.start();
 
 //                RecyclerView.LayoutParams lp = (RecyclerView.LayoutParams) view.getLayoutParams();

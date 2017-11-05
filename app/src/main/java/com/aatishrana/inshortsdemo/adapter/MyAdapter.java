@@ -90,7 +90,7 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 MultiImageVH multiImageVH = (MultiImageVH) holder;
                 CardItemMulti innerCards = (CardItemMulti) obj.getData();
 
-                LinearLayoutManager ll = new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.HORIZONTAL, false);
+                MyInnerLinearLayout ll = new MyInnerLinearLayout(holder.itemView.getContext(), LinearLayoutManager.HORIZONTAL, false);
                 try
                 {
                     SnapHelper snapHelper = new StartSnapHelper();
