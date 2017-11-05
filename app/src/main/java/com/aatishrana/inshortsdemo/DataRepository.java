@@ -6,6 +6,8 @@ import com.aatishrana.inshortsdemo.model.itemData.CardItemImage;
 import com.aatishrana.inshortsdemo.model.itemData.CardItemMulti;
 import com.aatishrana.inshortsdemo.model.itemData.CardItemMultiImage;
 import com.aatishrana.inshortsdemo.network.ApiInterface;
+import com.aatishrana.inshortsdemo.utils.Const;
+import com.aatishrana.inshortsdemo.utils.Help;
 import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
@@ -13,6 +15,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -44,34 +49,48 @@ public class DataRepository
             @Override
             public void subscribe(@NonNull final ObservableEmitter<List<CardItem>> e) throws Exception
             {
-                apiInterface.getAllData("123", "Android", "Vm10S1MyRXlXbE5UTTBaNFUyMXdhMVF3VGtaVVp6MDk=").enqueue(new Callback<JsonObject>()
-                {
-                    @Override
-                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response)
-                    {
-                        if (response.isSuccessful())
+                apiInterface.getAllData("123", "Android", "Vm10S1MyRXlXbE5UTTBaNFUyMXdhMVF3VGtaVVp6MDk=")
+                        .enqueue(new Callback<JsonObject>()
                         {
-                            try
+                            @Override
+                            public void onResponse(Call<JsonObject> call, Response<JsonObject> response)
                             {
-                                List<CardItem> data = parseJson(new JSONObject(response.body().toString()));
-                                e.onNext(data);
-                                e.onComplete();
-                            } catch (JSONException ex)
-                            {
-                                ex.printStackTrace();
-                                e.onError(ex);
+                                if (response.isSuccessful())
+                                {
+                                    try
+                                    {
+                                        List<CardItem> data = parseJson(new JSONObject(response.body().toString()));
+                                        Collections.sort(data, new Comparator<CardItem>()
+                                        {
+                                            @Override
+                                            public int compare(CardItem o1, CardItem o2)
+                                            {
+                                                if (o1.getRank() > o2.getRank())
+                                                    return 1;
+                                                else if (o1.getRank() < o2.getRank())
+                                                    return -1;
+                                                else
+                                                    return 0;
+                                            }
+                                        });
+                                        e.onNext(data);
+                                        e.onComplete();
+                                    } catch (JSONException ex)
+                                    {
+                                        ex.printStackTrace();
+                                        e.onError(ex);
+                                    }
+                                } else
+                                    e.onError(new RuntimeException("Network Call failed"));
                             }
-                        } else
-                            e.onError(new RuntimeException("Network Call failed"));
-                    }
 
-                    @Override
-                    public void onFailure(Call<JsonObject> call, Throwable t)
-                    {
-                        t.printStackTrace();
-                        e.onError(t);
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<JsonObject> call, Throwable t)
+                            {
+                                t.printStackTrace();
+                                e.onError(t);
+                            }
+                        });
             }
         });
     }
@@ -88,7 +107,7 @@ public class DataRepository
                 if (card_item.has("card_obj") && card_item.getJSONObject("card_obj").has("type"))
                 {
                     String itemType = card_item.getJSONObject("card_obj").getString("type");
-                    if (itemType.equalsIgnoreCase("IMAGE") || itemType.equalsIgnoreCase("MULTI_IMAGE_CARD"))
+                    if (itemType.equalsIgnoreCase(Const.mediaTypeSingleImage) || itemType.equalsIgnoreCase(Const.mediaTypeMultipleImage))
                     {
                         //flat data
                         String id = card_item.getString("id");
@@ -112,7 +131,7 @@ public class DataRepository
                         //data
                         CardItemData data = null;
                         JSONObject card_data = card_obj.getJSONObject("data");
-                        if (type.equalsIgnoreCase("Image"))
+                        if (type.equalsIgnoreCase(Const.mediaTypeSingleImage))
                         {
                             int height = card_data.getInt("height");
                             int width = card_data.getInt("width");
@@ -126,7 +145,7 @@ public class DataRepository
                                 placeHolderType = card_data.getJSONObject("placeholder").getString("type");
                             }
                             data = new CardItemImage(height, width, image_url, placeHolderAlt, placeHolderData, placeHolderType);
-                        } else if (type.equalsIgnoreCase("MULTI_IMAGE_CARD"))
+                        } else if (type.equalsIgnoreCase(Const.mediaTypeMultipleImage))
                         {
                             List<CardItemMultiImage> cardItemMultiImageList = new ArrayList<>();
                             JSONObject card_data_list = card_data.getJSONObject("card_data_list");

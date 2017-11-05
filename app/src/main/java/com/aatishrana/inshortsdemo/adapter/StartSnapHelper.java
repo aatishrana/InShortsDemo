@@ -1,4 +1,4 @@
-package com.aatishrana.inshortsdemo;
+package com.aatishrana.inshortsdemo.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -52,6 +52,7 @@ public class StartSnapHelper extends LinearSnapHelper
         }
         return out;
     }
+
 
     @Override
     public View findSnapView(RecyclerView.LayoutManager layoutManager)

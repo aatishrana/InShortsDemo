@@ -21,6 +21,7 @@ public class MainPresenter implements Presenter<MainView>
 {
     private MainView view;
     private List<CardItem> cache;
+    //todo create view state cache
     private DataRepository repository;
 
     public MainPresenter(DataRepository repository)

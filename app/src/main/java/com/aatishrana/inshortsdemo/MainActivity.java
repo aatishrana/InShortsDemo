@@ -2,15 +2,22 @@ package com.aatishrana.inshortsdemo;
 
 import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
-import android.util.Log;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import com.aatishrana.inshortsdemo.adapter.MyAdapter;
+import com.aatishrana.inshortsdemo.adapter.MyLinearLayout;
+import com.aatishrana.inshortsdemo.adapter.StartSnapHelper;
 import com.aatishrana.inshortsdemo.base.BasePresenterActivity;
 import com.aatishrana.inshortsdemo.base.PresenterFactory;
 import com.aatishrana.inshortsdemo.model.CardItem;
@@ -21,9 +28,10 @@ import com.aatishrana.inshortsdemo.presenter.MainPresenterFactory;
 import com.aatishrana.inshortsdemo.presenter.MainView;
 import com.aatishrana.inshortsdemo.utils.Help;
 
+import java.net.URI;
 import java.util.List;
 
-public class MainActivity extends BasePresenterActivity<MainPresenter, MainView> implements MainView
+public class MainActivity extends BasePresenterActivity<MainPresenter, MainView> implements MainView, MyAdapter.MyClickListener
 {
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
@@ -31,9 +39,13 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, MainView>
     private Button btnRetry;
 
     private MyAdapter adapter;
+    private BottomSheetBehavior mBottomSheetBehavior1;
+    private WebView webView;
+    private TextView tvClose, tvUrl;
 
     private MainPresenterFactory presenterFactory;
     private MainPresenter presenter;
+    private MyLinearLayout layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -43,7 +55,6 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, MainView>
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         DataRepository dataRepository = new DataRepository(apiInterface);
         presenterFactory = new MainPresenterFactory(dataRepository);
-        Log.e("aatish onCreate", "" + this.presenterFactory);
 
         //init views
         recyclerView = (RecyclerView) findViewById(R.id.activity_main_recyclerView);
@@ -51,12 +62,34 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, MainView>
         errorView = (LinearLayout) findViewById(R.id.activity_main_ll_error_view);
         btnRetry = (Button) findViewById(R.id.activity_main_btn_retry);
 
+        tvClose = (TextView) findViewById(R.id.sheet_more_close);
+        tvUrl = (TextView) findViewById(R.id.sheet_more_url);
+        View bottomSheet = findViewById(R.id.bottom_sheet1);
+        mBottomSheetBehavior1 = BottomSheetBehavior.from(bottomSheet);
+        webView = (WebView) findViewById(R.id.sheet_more_webview);
+        webView.getSettings().setAppCachePath(getApplicationContext().getCacheDir().getAbsolutePath());
+        webView.getSettings().setAllowFileAccess(true);
+        webView.getSettings().setAppCacheEnabled(true);
+//        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
+        tvClose.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            }
+        });
+
         //recycler view
         SnapHelper snapHelper = new StartSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
-        adapter = new MyAdapter();
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        layoutManager = new MyLinearLayout(this, LinearLayoutManager.VERTICAL, false);
+        adapter = new MyAdapter(MainActivity.this);
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+        mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        mBottomSheetBehavior1.setPeekHeight(0);
         super.onCreate(savedInstanceState);
     }
 
@@ -78,7 +111,6 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, MainView>
     @Override
     protected PresenterFactory<MainPresenter> getPresenterFactory()
     {
-        Log.e("aatish getPresenterFac", "" + this.presenterFactory);
         return this.presenterFactory;
     }
 
@@ -131,9 +163,25 @@ public class MainActivity extends BasePresenterActivity<MainPresenter, MainView>
 
     private void hideAllViews()
     {
-//        recyclerView.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);
         errorView.setVisibility(View.GONE);
         btnRetry.setVisibility(View.GONE);
+    }
+
+
+    @Override
+    public void onClick(String url, int position, boolean fromMultiImages)
+    {
+        if (!fromMultiImages && position == layoutManager.findFirstVisibleItemPosition())
+            if (mBottomSheetBehavior1.getState() != BottomSheetBehavior.STATE_EXPANDED
+                    && url != null
+                    && url.length() > 0)
+            {
+                mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_EXPANDED);
+                webView.setWebViewClient(new WebViewClient());
+                webView.loadUrl(url);
+                tvUrl.setText(url);
+            }
     }
 }
